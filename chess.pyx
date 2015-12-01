@@ -1,4 +1,4 @@
-#cython: boundscheck=False, wraparound=False
+#cython: boundscheck=True, wraparound=False
 
 import numpy as np
 cimport numpy as np
@@ -153,15 +153,22 @@ cdef:
 	)
 
 
-
 ctypedef struct Position:
-	np.int32_t[:] board
-	np.uint8_t[:] wc
+	np.int32_t board[64]
+	np.uint8_t wc[15]
 	np.uint8_t[:] bc
 	np.int32_t ep
 	np.int32_t kp
 	np.int32_t score
 
+
+cdef Position *create_new_position(np.int32_t[:] board,...)
+
+
+   Position *new_pos = <Position *> malloc(sizeof(Position))
+   return new_pos
+   
+    
 ###############################################################################
 # Chess logic
 ###############################################################################
@@ -289,7 +296,8 @@ cpdef Position make_move(Position pos, np.int32_t[:] move) nogil:
 		piece = pos.board[i]
 		dest = pos.board[j]
 
-		# Create copy of variables and apply 
+		# Create copy of variables and apply
+        
 		new_pos.board = pos.board.copy()
 		new_pos.wc = pos.wc.copy()
 		new_pos.bc = pos.bc.copy()

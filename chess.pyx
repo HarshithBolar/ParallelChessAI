@@ -155,9 +155,10 @@ cdef:
 	)
 
 ctypedef struct Position:
-	np.int32_t[:] board
-	np.uint8_t[:] wc
-	np.uint8_t[:] bc
+    # YOU NEED TO DEFINE THESE SIZES
+	np.int32_t board[BOARD_SIZE]
+	np.uint8_t wc[WC_SIZE]
+	np.uint8_t bc[BC_SIZE]
 	np.int32_t ep
 	np.int32_t kp
 	np.int32_t score
@@ -168,18 +169,13 @@ cdef Position *init_position(np.int32_t[:] board,
 							np.int32_t ep,
 							np.int32_t kp,
 							np.int32_t score) nogil:
-	with gil:
-		print("Here4")
-	cdef Position *pos = <Position *> malloc(sizeof(Position))
-	
-	with gil:
-		print("Here5")
+    cdef int i
 
-	with gil:
-		print("Here6")
-	pos.board = board
-	with gil:
-		print("Here7")
+    for i in range(BOARD_SIZE):
+        pos.board[i] = board[i]
+
+
+    # YOU NEED TO DO THE SAME HERE FOR wc AND bc
 	pos.wc = wc
 	pos.bc = bc
 	pos.ep = ep
